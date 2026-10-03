@@ -1,0 +1,42 @@
+HOW TO PLAY - THE SURVIVAL CIV GAME (BETA)
+==============================================
+
+REQUIREMENTS:
+1. You need Python installed on your computer.
+   Download it here: https://www.python.org/downloads/
+
+HOW TO RUN (HOST / SERVER):
+1. One person must be the HOST.
+2. Open the game folder.
+3. Double-click `run_server.py`.
+   (Or open terminal and run: `python run_server.py`)
+4. A black window will appear. It will tell you your IP Address (e.g., 192.168.1.5).
+5. Give this IP Address to your friends.
+
+HOW TO RUN (PLAYER):
+1. Open the game folder.
+2. Double-click `launcher.py`. 
+   (Or double-click `start_client.bat` if available, or run `python launcher.py`).
+3. Click "PLAY".
+4. Enter the Host's IP Address when asked (default is 127.0.0.1 for local).
+5. Enter your Username.
+6. Enjoy!
+
+CONTROLS:
+- WASD: Move
+- F: Interact (Open Menu for block under mouse)
+- LEFT CLICK: Gather / Attack
+- RIGHT CLICK: Build / Interact
+- I: Inventory
+- V: Civilization Menu
+- TAB: Player List
+- ENTER: Chat
+
+GAMEPLAY TIPS:
+1. Gather Wood and Stone.
+2. Build a Crafting Table.
+3. Craft Tools (Pickaxe, Axe).
+4. Found a City (build a Town Center).
+5. Gather Iron, Gold, Coal, Oil.
+6. Research Technologies (Industrialization, Chemistry).
+7. Build Factories, Guns, and Conquer!
