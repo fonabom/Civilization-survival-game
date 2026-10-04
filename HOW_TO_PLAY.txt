@@ -1,42 +1,241 @@
-\HOW TO PLAY - THE SURVIVAL CIV GAME (BETA)
+HOW TO PLAY - THE SURVIVAL CIV GAME (build b13)
 ==============================================
 
+INSTALLING WITHOUT PYTHON (Windows players):
+- Download Civilization-Setup-b13.exe from the releases page and run it: it
+  installs the game, makes a desktop / start menu shortcut and can be removed
+  from "Apps & features" like any other program.
+- The installer can also put the dedicated server (CivilizationServer.exe) next
+  to the game - pick "Сервер для друзей" during setup if a friend will host.
+- With Python installed you can use installer/install.py instead (any system).
+
 REQUIREMENTS:
-1. You need Python installed on your computer.
-   Download it here: https://www.python.org/downloads/
+1. Python 3.10 or newer: https://www.python.org/downloads/
+2. Then install pygame once:   pip install -r requirements.txt
+
+LANGUAGES: English / Polski / Русский - press F2 in the main menu, or pick it in
+SETTINGS (also inside the game: Esc -> Settings).
+
+PLAYING WITH FRIENDS - THE SERVER IS ITS OWN DOWNLOAD NOW (b12):
+- The server no longer needs pygame and ships as Civilization_Server_<build>.zip:
+  unzip it anywhere and run "python run_server.py" (or CivilizationServer.exe).
+- Check it first: python check_server.py --forbid-pygame  -> "the server works".
+- Give your friends the address printed at startup: <your-ip>:<port>.
+- Updates: the launcher follows a channel - stable (real releases) or beta (every
+  bNN build) - and keeps the three previous versions for the "Roll back" button.
 
 HOW TO RUN (HOST / SERVER):
 1. One person must be the HOST.
-2. Open the game folder.
-3. Double-click `run_server.py`.
-   (Or open terminal and run: `python run_server.py`)
-4. A black window will appear. It will tell you your IP Address (e.g., 192.168.1.5).
-5. Give this IP Address to your friends.
+2. Open the game folder in a terminal.
+3. Run:  python run_server.py
+4. The window shows the address to share, e.g. 192.168.1.5:5555
+5. Give that address to your friends (same Wi-Fi / LAN).
+6. If friends cannot connect, allow Python through the Windows Firewall
+   (Windows asks the first time you start the server - choose "Private networks").
+7. The world is saved to saves/world.json every minute, when the server stops
+   (Ctrl+C) and when somebody types /save in the chat.
+   Use  python run_server.py --save saves/friends.json  to keep several worlds,
+   --no-save for a disposable game, or --no-accounts to switch accounts off.
 
 HOW TO RUN (PLAYER):
 1. Open the game folder.
-2. Double-click `launcher.py`. 
-   (Or double-click `start_client.bat` if available, or run `python launcher.py`).
-3. Click "PLAY".
-4. Enter the Host's IP Address when asked (default is 127.0.0.1 for local).
-5. Enter your Username.
-6. Enjoy!
+2. Double-click launcher.py, or run:  python run_client.py
+3. Type the host address (127.0.0.1 for a game on your own PC).
+4. Either CREATE ACCOUNT + LOG IN (your inventory, HP and position come back the
+   next time you log in), or PLAY AS GUEST (nothing is kept between sessions).
+5. Tab moves between the fields, ESC quits the menu.
+
+THE LAUNCHER (optional):
+- launcher.py -> PLAY starts the game, Check updates downloads the newest build.
+- Updates come from GitHub (the newest release, or the repository archive itself).
+- Before installing, the launcher copies your folder to backup_before_update_...
+- Builds are named with letters and digits: b8, b9 ... b10 (b10 is newer than b9).
 
 CONTROLS:
-- WASD: Move
-- F: Interact (Open Menu for block under mouse)
-- LEFT CLICK: Gather / Attack
-- RIGHT CLICK: Build / Interact
-- I: Inventory
-- V: Civilization Menu
-- TAB: Player List
-- ENTER: Chat
+  WASD ............ walk
+  Left mouse ...... gather / punch a player under the cursor
+  Right mouse ..... open the building under the cursor
+  1..9, wheel ..... take an item from the hotbar into your hand
+  E ............... gather the nearest resource / harvest a farm
+  C ............... crafting and buildings
+  I ............... inventory (click an item to hold it, right-click to drop it)
+  V ............... cities and countries (roles, tax, fund, diplomacy)
+  Q ............... eat the best food you carry (or right-click food)
+  H ............... use a medkit or a bandage
+  B ............... crafting menu, opened on the Buildings tab
+  Y ............... market: offers and your own trade
+  F ............... use a building (town center, research table, furnace)
+  Enter ........... chat (/help /save /wipe /regen)
+  P ............... place a waypoint, Shift+P removes the nearest one
+  O ............... sort the inventory, Shift+O fills the hotbar
+  F1 .............. help: first steps, keys, world, cities
+  Tab (hold) ...... player list
+  Esc ............. pause / close a menu
+  F11 ............. fullscreen
 
-GAMEPLAY TIPS:
-1. Gather Wood and Stone.
-2. Build a Crafting Table.
-3. Craft Tools (Pickaxe, Axe).
-4. Found a City (build a Town Center).
-5. Gather Iron, Gold, Coal, Oil.
-6. Research Technologies (Industrialization, Chemistry).
-7. Build Factories, Guns, and Conquer!
+  (every key can be changed: pause -> Settings -> Keys)
+
+CRAFTING AND BUILDING:
+- Crafting needs the right station: tools and swords at the crafting table,
+  iron tools / pistol at the advanced workbench, gunpowder at the chemical plant.
+- In the crafting menu: left click = craft 1, right click = craft 5,
+  Shift + left click = craft as many as you can.
+- Buildings tab: pick a building, then click a tile within 8 tiles of yourself.
+- Everything you do depends on the item in your hand: an axe fells trees faster,
+  a sword hits harder, a pistol needs ammo. Empty hands are weak.
+
+RESOURCE PACKS:
+- Packs live in resourcepacks/<name>/ (pack.json + textures/*.png). Pick one in
+  SETTINGS; missing textures fall back to the built-in ones.
+- Make your own:  python tools/make_resourcepack.py --all
+
+TIPS:
+- The server is authoritative: if you lag, your position snaps back.
+- Progress is stored in server_data/accounts.json (PBKDF2-hashed passwords).
+- Two people cannot log into the same account at once.
+
+NEW IN b13 - BIOMES, SEASONS, MUSIC, FIRST STEPS AND COMFORT
+- The land is not one big field any more: meadow, forest, desert, snowy tundra,
+  swamp and caves. Trees grow in forests, ore hides in caves, sheep like meadows,
+  wolves and bears prefer forests and tundra. Swamps and tundra slow you down
+  (0.8 / 0.85), sand is a little quicker (1.05) - the client uses the same
+  numbers as the server, so nothing rubber-bands.
+- SEASONS: spring -> summer -> autumn -> winter, a few game days each. Spring
+  grows the woods back, autumn fills the world with mushrooms and berries,
+  winter slows everybody down and turns the weather to fog. The day number and
+  the season are next to the clock; snow falls in winter. A server can switch
+  the whole thing off with "seasons": false in server_config.json.
+- MUSIC: calm day and night tracks, separate music in caves and in a fight.
+  Put your own files into assets/music/ (or a resource pack) - see "YOUR OWN
+  MUSIC" below. Music on/off and its volume are in the settings.
+- FIRST STEPS: a chain of ten small goals for a new player (look around, get
+  wood, make a tool, stone, a workbench, a campfire, eat, a torch, found a city,
+  survive your first winter). The current step is shown in the corner, the
+  progress is saved in config.json, and Settings has "Start the first steps
+  over". Press F1 any time for help: first steps, keys, world, cities.
+- YOUR KEYS, YOUR RULES: pause -> Settings -> Keys. Click a line and press the
+  key you want; if the key is taken the game tells you who has it and offers to
+  swap the two actions. "Reset the keys" brings the defaults back.
+- WAYPOINTS: P places a mark where you stand, Shift+P removes the nearest one.
+  Marks show up on the minimap and as an arrow with the distance in the corner.
+  They are kept per server in waypoints.json.
+- INVENTORY: O switches the order (category -> amount -> name), Shift+O drops
+  your tools and food into the hotbar.
+- CHAT CHANNELS: /g everybody, /l only people nearby (12 tiles), /c your country,
+  /w <name> <text> one person. A bare /g, /l or /c switches the channel you use
+  from then on (remembered in the settings).
+
+NEW IN b11 - WALKING ON WATER AND A REAL CHARACTER
+- You can now walk INTO the water: you wade through it at 40% speed (server key
+  "swim_speed"). You never drown and you can always climb back to the shore.
+  A bridge over the water is still the fast way across (1.2x), a road is 1.35x,
+  and rock blocks everybody. Set "swim": false to get the old b9 rule back.
+- The player is a little PERSON now, not a coloured cube: head, body, arms and
+  legs, your own colour, he turns the way you walk and leaves ripples in water.
+- The inventory no longer shows the same stack twice (in the grid and in the
+  hotbar row) - the grid lists what the hotbar does not show yet.
+- Bridges can be placed on the water now. The screen used to say "you cannot
+  build here" on a river: the client thought water blocks everything, the
+  server was happy. Both sides share one rule again (rock never, a bridge only
+  on water, everything else only on dry land).
+- Nobody can build THROUGH the city walls any more: an outsider used to stand
+  just outside the walls and drop a tower inside them. Every tile of the
+  building is checked now, and the message names the city that refused.
+- Sounds: put your own files (wav / ogg / mp3) into `assets/sounds/` or into
+  `resourcepacks/<your pack>/sounds/` and pick the pack in the settings - see
+  "YOUR OWN SOUNDS" below.
+- Hungry? Press Q to eat the best food you carry, or right-click a food item in
+  the inventory.
+
+YOUR OWN SOUNDS:
+  1. Name your files after the game's sounds (chop, mine, hit, hurt, shot, bow,
+     craft, build, break, eat, step, pickup, task, death, night, rain) - the
+     extension may be .wav, .ogg or .mp3.
+  2. Either drop them into assets/sounds/ (they replace the built-in ones), or
+     make a resource pack: resourcepacks/mysounds/sounds/*.ogg plus
+     resourcepacks/mysounds/pack.json with {"name": "My sounds"}.
+  3. Pick that pack in SETTINGS inside the game - the new sounds apply at once.
+  The built-in sounds are generated by:  python tools/make_sounds.py --force
+
+YOUR OWN MUSIC:
+- Music works like the sounds: resource pack first, then assets/music/. The file
+  name says when it plays - day_*.ogg, night_*.ogg, cave_*.ogg, battle_*.ogg,
+  calm_*.ogg (calm is the fallback). .ogg, .mp3 and .wav all work.
+- The two built-in tracks are short loops made by the game itself:
+  python tools/make_sounds.py --force   # regenerates sounds and music
+
+NEW IN b10 - CIVILISATION
+- Roles: a city leader (V menu, click a member, or /role <name> <role>) gives
+  out ELDER, BUILDER, WARRIOR or CITIZEN. Inside the city walls only builders and
+  elders may build and use the storage, only elders research; the warrior gets
+  +10% melee damage. Outside the walls everybody is as free as before.
+- TAX: the leader sets 0-40% (-/+ buttons in the V menu or /tax 40). The tax is
+  taken from what members gather INSIDE the city and goes into the city fund;
+  the fund pays for the buildings of that city first, and only then your own
+  pack. /city shows the tier, the tax, the fund and the roles.
+- SIEGE: a town centre can only be broken during a war, and the city is warned
+  while it is attacked. When it falls, a country takes the city over: the old
+  leader is thrown out, the posts are vacant and the fund goes to the winner.
+  Without a country you can only SACK the city (fund + one tier down).
+- WINNING: hold every city on the map, or build a WONDER (3x3, 2000 HP, 400
+  wood + 300 stone + 150 iron + 100 gold, needs industrialization and the
+  industrial age, only a city leader may build it). The winner is announced to
+  everybody and shown on screen.
+- AGES: stone -> bronze -> iron -> industrial -> electric, following the techs
+  of your country (the age is shown in the HUD and in the V menu).
+- MEDICINE (tech): hospital, bandage (15 HP) and medkit (45 HP + cures
+  poisoning). Press H to use what you carry; a hospital heals everybody within
+  140 px for 6 HP every 5 seconds.
+- ELECTRICITY (tech): generator and lamp. A lamp only shines within 400 px of a
+  generator - without power it stays dark.
+
+NEW IN b9 - THE LIVING WORLD
+- Water: five lakes and a river cut the map. You cannot swim, so build a BRIDGE
+  (4 wood, masonry) on the water to cross it. The minimap shows water in blue.
+- Caves (seven of them, one entrance each) are dark inside - take a torch. They
+  grow mushrooms and hide deep veins of iron, gold, coal and sulfur: mining in a
+  cave pays DOUBLE. Bears live down there.
+- Fishing: craft a fishing rod (3 wood + 2 string, agriculture), stand within two
+  tiles of water and press E. You catch 1-2 fish; cook them on a campfire into
+  cooked fish. Mushrooms are edible but slightly poisonous.
+- Weather is now gameplay: rain slows walking down and doubles the speed of farm
+  growth, fog dims torches and campfires. Turn it off with "weather": false.
+- The wolves now hunt in packs of 3-5 and take revenge when one of them is hurt.
+- Countries can be at war, at peace (default) or allied. The leader picks a
+  country with the right mouse button in the V menu and presses War / Peace /
+  Alliance (or uses /war /peace /ally <country> in the chat). While two countries
+  are at peace nobody can hurt their players or buildings.
+- The MARKET (60 wood + 20 stone, logistics) opens with Y when you stand next to
+  it: post "I give X for Y" and take other people's offers. The goods of an offer
+  are held by the market; the payment goes to the seller's inventory, to his
+  city storage, or waits for him to log in again.
+
+NEW IN b8 - SURVIVAL, WEAR AND ANIMALS
+- Food matters: hunger falls over time, you starve at 0 and slowly heal when
+  well fed. Press Q to eat the best food you carry, or use the inventory
+  (right click food). Raw meat can make you sick.
+- Tools wear out. The bar under an item shows what is left; a broken tool
+  disappears from your hand.
+- Armour: helmet, chest, legs, feet. Right click an armour piece to wear it,
+  click an armour slot to take it off. Armour cuts incoming damage (up to 75%).
+- Animals wander the world: sheep, cows, chickens and wolves. Hit them for
+  meat, leather, wool and string; right click one with raw meat in the pack to
+  tame it. Wolves hunt at night - stay near a torch or a campfire.
+- Day and night cycle plus weather (clear / rain / fog) with light from torches
+  and campfires. Night is dark, so place lights before dusk.
+- Buildings have health: hit a foreign wall to break it, repair your own with R
+  (or right click it) - stone and wood are spent.
+- Chests and warehouses store items; press E near them (right click) to open the
+  storage screen: left click = 1, right click = all, Shift = whole stack.
+- Tasks and achievements: press K to see them; rewards land in your inventory.
+- Research: city tiers (town centre) and country technologies (research table)
+  unlock new buildings and recipes. Only leaders can research.
+- Chat commands: /who /online /where /time /day /msg <name> <text>.
+- b10 adds /role <name> <role>, /tax <0-40> and /city.
+- Press M for the minimap (terrain, buildings, cities, players, pets).
+- Sound effects: generated by tools/make_sounds.py; volume and on/off are in the
+  settings screen.
+- Server settings live in server_config.json: pvp, day_length, hunger_rate,
+  resource_rate, durability, weather, swim, swim_speed, animals, wolves,
+  animal_respawn, taxes, victory, start_kit, max_players, save_interval.
+  Command line: --config <file>.

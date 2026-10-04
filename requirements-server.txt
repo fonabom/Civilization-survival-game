@@ -1,0 +1,4 @@
+# The dedicated server has no dependencies at all (b12).
+#
+# pygame is needed only by the game client - that is the whole point of
+# separating the server package.

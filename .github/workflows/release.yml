@@ -1,0 +1,108 @@
+name: release
+
+# Push a build tag like b12 (see build.txt / tools/bump_build.py): GitHub runs the
+# tests, builds the three packages and publishes a release. Tags of the form bNN
+# are published as PRE-RELEASES (they feed the beta channel of the launcher);
+# a version tag like 1.0.0 becomes a normal release (the stable channel).
+#
+# A Windows runner also builds Civilization.exe / CivilizationServer.exe and the
+# Inno Setup installer Civilization-Setup-<build>.exe, so a player can install the
+# game without Python. The launcher downloads Civilization_Beta.zip, so that file
+# name must stay as it is.
+on:
+  push:
+    tags:
+      - "b*"
+      - "[0-9]*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+
+      - name: Check that the tag matches build.txt
+        shell: bash
+        run: |
+          tag="$(echo "${GITHUB_REF_NAME}" | tr -d ' \n\r')"
+          file="$(tr -d ' \n\r' < build.txt)"
+          echo "tag=$tag build.txt=$file"
+          if [ "$tag" != "$file" ]; then
+            echo "::error::build.txt ($file) does not match the tag ($tag)."
+            echo "Run 'python tools/bump_build.py' and commit before tagging,"
+            echo "otherwise the launcher will keep offering the same update."
+            exit 1
+          fi
+
+      - name: Run tests headless
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        run: python -m pytest tests -q
+
+      - name: Build the packages (bundle + client + server)
+        run: python tools/make_release.py --kind all --out-dir dist --manifest dist/packages.json
+
+      - name: Show what was built
+        run: python -c "import json;[print(p['kind'], p['path'], p['files'], 'files', p['sha256'][:16]) for p in json.load(open('dist/packages.json'))]"
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/Civilization_Beta.zip
+            dist/Civilization_Client_*.zip
+            dist/Civilization_Server_*.zip
+            dist/packages.json
+          generate_release_notes: true
+          prerelease: ${{ startsWith(github.ref_name, 'b') }}
+
+  windows-installer:
+    runs-on: windows-latest
+    needs: packages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Build Civilization.exe and CivilizationServer.exe
+        run: python installer/build_installer.py --pyinstaller --out-dir dist
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Build Civilization-Setup-<build>.exe
+        shell: cmd
+        run: |
+          set PATH=%PATH%;C:\Program Files (x86)\Inno Setup 6
+          python installer/build_installer.py --iscc --out-dir dist
+
+      - name: Upload the installer as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: civilization-setup
+          path: dist/installer/*.exe
+
+      - name: Attach the installer to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/installer/*.exe
+          prerelease: ${{ startsWith(github.ref_name, 'b') }}

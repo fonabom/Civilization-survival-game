@@ -1,6 +1,6 @@
 import unittest
-import json
-from shared.protocol import Protocol, encode
+
+from shared.protocol import Protocol
 
 class TestProtocol(unittest.TestCase):
     def test_encode(self):

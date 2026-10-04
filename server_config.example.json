@@ -1,0 +1,23 @@
+{
+  "_info": "Copy to server_config.json (next to run_server.py) and change what you need.",
+  "pvp": true,
+  "day_length": 600,
+  "hunger_rate": 1.0,
+  "resource_rate": 1.0,
+  "durability": true,
+  "tasks": true,
+  "taxes": true,
+  "victory": true,
+  "weather": true,
+  "swim": true,
+  "swim_speed": 0.4,
+  "animals": true,
+  "wolves": true,
+  "animal_respawn": 45,
+  "start_kit": {
+    "wood": 5,
+    "stone": 5
+  },
+  "max_players": 24,
+  "save_interval": 60
+}

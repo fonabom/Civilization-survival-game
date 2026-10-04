@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments (create your own: python -m venv .venv)
+venv/
+.venv/
+env/
+
+# Game / launcher runtime files
+launcher.log
+launcher_settings.json
+server_data/
+saves/
+config.json
+server_config.json
+assets/sounds_cache/
+waypoints.json
+*.tmp
+backup_before_update_*/
+dist/
+*.zip
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
